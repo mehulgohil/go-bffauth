@@ -40,7 +40,7 @@ func (l *LogoutHandler) Logout(ctx iris.Context) {
 		return
 	}
 
-	returnTo, err := url.Parse(config.EnvVariables.ShortifyFrontendDomain)
+	returnTo, err := url.Parse(config.EnvVariables.FrontendURL)
 	if err != nil {
 		ctx.StopWithError(http.StatusInternalServerError, err)
 		return

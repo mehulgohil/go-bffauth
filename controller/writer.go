@@ -29,7 +29,7 @@ func (w *WriterHandler) WriterRedirect(ctx iris.Context) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest(ctx.Request().Method, config.EnvVariables.ShortifyWriterAPI, ctx.Request().Body)
+	req, err := http.NewRequest(ctx.Request().Method, config.EnvVariables.BackendApi, ctx.Request().Body)
 	if err != nil {
 		ctx.StopWithError(500, err)
 		return

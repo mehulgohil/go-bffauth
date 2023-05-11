@@ -53,5 +53,5 @@ func (c *CallbackHandler) Callback(ctx iris.Context) {
 	ctx.SetCookieKV("logged_id_email", profile["email"].(string))
 
 	// Redirect to logged in page.
-	ctx.Redirect(config.EnvVariables.ShortifyFrontendDomain, http.StatusTemporaryRedirect)
+	ctx.Redirect(config.EnvVariables.FrontendURL, http.StatusTemporaryRedirect)
 }
