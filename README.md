@@ -14,13 +14,6 @@ on providing a dedicated backend
 to handle and address all authentication requirements and challenges of the frontend application. 
 (SPA)
 
-## Objectives
-
-The primary objective of the tech blog is to educate readers about the Backend for Frontend
-(BFF) authentication pattern and its implementation in the Go programming language.
-The blog will provide a comprehensive overview of the pattern, its benefits,
-and the challenges it solves in the context of building authentication systems for front-end applications.
-
 ## History
 
 SPAs typically use token-based authentication, such as JSON Web Tokens (JWTs), to authenticate and authorize users.
