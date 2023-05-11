@@ -27,3 +27,34 @@ func (r *RedisClient) GetKeyValue(key string) (string, error) {
 
 	return val, nil
 }
+
+func (r *RedisClient) DeleteKey(key string) error {
+	_, err := r.Client.Del(context.Background(), key).Result()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *RedisClient) HSetKeyValue(key string, value map[string]interface{}, exp time.Duration) error {
+	_, err := r.Client.HSet(context.Background(), key, value).Result()
+	if err != nil {
+		return err
+	}
+
+	_, err = r.Client.Expire(context.Background(), key, exp).Result()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *RedisClient) HGetKeyValue(key string) (map[string]string, error) {
+	result, err := r.Client.HGetAll(context.Background(), key).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/kataras/iris/v12"
 	"github.com/mehulgohil/go-bffauth.git/config"
 	"github.com/mehulgohil/go-bffauth.git/interfaces"
@@ -15,9 +14,17 @@ type WriterHandler struct {
 }
 
 func (w *WriterHandler) WriterRedirect(ctx iris.Context) {
-	userCookie := ctx.GetCookie("logged_id_email")
-	if userCookie == "" {
-		ctx.StopWithError(iris.StatusUnauthorized, errors.New("please make sure user is logged in"))
+	raw, err := ctx.User().GetRaw()
+	if err != nil {
+		ctx.StopWithError(500, err)
+		return
+	}
+	profile := raw.(map[string]string)
+	email := profile["email"]
+
+	token, err := w.RedisClient.GetKeyValue(email + "_token")
+	if err != nil {
+		ctx.StopWithError(500, err)
 		return
 	}
 
@@ -28,7 +35,7 @@ func (w *WriterHandler) WriterRedirect(ctx iris.Context) {
 		return
 	}
 
-	req.Header.Add("Authorization", "Bearer "+tokenMap[userCookie])
+	req.Header.Add("Authorization", "Bearer "+token)
 	req.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(req)

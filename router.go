@@ -63,12 +63,13 @@ func (router *router) InitRouter(auth *authenticator.Authenticator, redis interf
 	callbackHandler := controller.CallbackHandler{Auth: auth, RedisClient: redis}
 	logoutHandler := controller.LogoutHandler{RedisClient: redis}
 	writerHandler := controller.WriterHandler{RedisClient: redis}
+	middlewareHandler := middleware.MiddlewareHandler{RedisClient: redis}
 
 	app.Get("/login", loginHandler.Login)
 	app.Get("/callback", callbackHandler.Callback)
 	app.Get("/logout", logoutHandler.Logout)
 
-	app.Post("/shorten", middleware.IsAuthenticated, writerHandler.WriterRedirect)
+	app.Post("/shorten", middlewareHandler.IsAuthenticated, writerHandler.WriterRedirect)
 
 	return app
 }
