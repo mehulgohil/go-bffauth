@@ -37,7 +37,7 @@ func (router *router) InitRouter(auth *authenticator.Authenticator, redis interf
 
 	// Our custom CORS middleware.
 	crs := func(ctx iris.Context) {
-		ctx.Header("Access-Control-Allow-Origin", config.EnvVariables.ShortifyFrontendDomain)
+		ctx.Header("Access-Control-Allow-Origin", config.EnvVariables.FrontendURL)
 		ctx.Header("Access-Control-Allow-Credentials", "true")
 
 		if ctx.Method() == iris.MethodOptions {
@@ -62,14 +62,15 @@ func (router *router) InitRouter(auth *authenticator.Authenticator, redis interf
 	loginHandler := controller.LoginHandler{Auth: auth}
 	callbackHandler := controller.CallbackHandler{Auth: auth, RedisClient: redis}
 	logoutHandler := controller.LogoutHandler{RedisClient: redis}
-	writerHandler := controller.WriterHandler{RedisClient: redis}
+	backendApiHandler := controller.BackendApiHandler{RedisClient: redis}
 	middlewareHandler := middleware.MiddlewareHandler{RedisClient: redis}
 
 	app.Get("/login", loginHandler.Login)
 	app.Get("/callback", callbackHandler.Callback)
 	app.Get("/logout", logoutHandler.Logout)
 
-	app.Post("/shorten", middlewareHandler.IsAuthenticated, writerHandler.WriterRedirect)
+	// Backend Api
+	app.Post("/shorten", middlewareHandler.IsAuthenticated, backendApiHandler.WriterRedirect)
 
 	return app
 }

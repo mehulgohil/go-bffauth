@@ -9,11 +9,11 @@ import (
 	"net/http"
 )
 
-type WriterHandler struct {
+type BackendApiHandler struct {
 	RedisClient interfaces.IRedisLayer
 }
 
-func (w *WriterHandler) WriterRedirect(ctx iris.Context) {
+func (w *BackendApiHandler) WriterRedirect(ctx iris.Context) {
 	raw, err := ctx.User().GetRaw()
 	if err != nil {
 		ctx.StopWithError(500, err)
