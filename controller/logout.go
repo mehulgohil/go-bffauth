@@ -46,6 +46,9 @@ func (l *LogoutHandler) Logout(ctx iris.Context) {
 		return
 	}
 
+	// remove the logged_id_email http-only cookie from context
+	ctx.RemoveCookie("logged_id_email")
+
 	parameters := url.Values{}
 	parameters.Add("returnTo", returnTo.String())
 	parameters.Add("client_id", config.EnvVariables.Auth0ClientID)
