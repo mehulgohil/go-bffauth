@@ -34,6 +34,9 @@ func (l *LogoutHandler) Logout(ctx iris.Context) {
 		return
 	}
 
+	// remove the logged_id_email http-only cookie from context
+	ctx.RemoveCookie("logged_id_email")
+
 	logoutUrl, err := url.Parse("https://" + config.EnvVariables.Auth0Domain + "/v2/logout")
 	if err != nil {
 		ctx.StopWithError(http.StatusInternalServerError, err)
@@ -45,9 +48,6 @@ func (l *LogoutHandler) Logout(ctx iris.Context) {
 		ctx.StopWithError(http.StatusInternalServerError, err)
 		return
 	}
-
-	// remove the logged_id_email http-only cookie from context
-	ctx.RemoveCookie("logged_id_email")
 
 	parameters := url.Values{}
 	parameters.Add("returnTo", returnTo.String())
